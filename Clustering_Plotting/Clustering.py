@@ -84,5 +84,4 @@ class Cluster:
         k_values, silhouette_scores, optimal_k = self._silhouette_calculator()
         PC1, PC2 = self._PCA_decomposition()
         cluster_kmenas = self.final_clusters(optimal_k)
-        print(k_values, silhouette_scores, optimal_k, PC1, PC2, cluster_kmenas)
         return k_values, silhouette_scores, optimal_k, PC1, PC2, cluster_kmenas

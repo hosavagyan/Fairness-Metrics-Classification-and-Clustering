@@ -3,16 +3,6 @@ import pandas as pd
 from holisticai.bias.metrics import abroca, accuracy_diff, z_test_diff, z_test_ratio, classification_bias_metrics
 from sklearn.metrics import confusion_matrix, accuracy_score, adjusted_mutual_info_score
 
-# fixme MAKE THIS WHOLE THING CLASS STRUCTURE
-
-def demographic_parity(y_pred, sensitive_attr):
-    unique_groups = np.unique(sensitive_attr)
-    group_parity = {}
-    for group in unique_groups:
-        group_indices = (sensitive_attr == group)
-        group_parity[group] = np.mean(y_pred[group_indices])
-    return demographic_parity.__name__, max(group_parity.values()), 0
-
 def mean_difference(y_pred, sensitive_attr):
     unique_groups = np.unique(sensitive_attr)
     group_means = {}
@@ -30,7 +20,8 @@ def equal_opportunity(y_true, y_pred, sensitive_attr):
         group_indices = (sensitive_attr == group)
         tn, fp, fn, tp = confusion_matrix(y_true[group_indices], y_pred[group_indices]).ravel()
         group_tpr[group] = tp / (tp + fn) if (tp + fn) > 0 else 0
-    return equal_opportunity.__name__, max(group_tpr.values()), 0
+    disparity = max(group_tpr.values()) - min(group_tpr.values())
+    return equal_opportunity.__name__, disparity, 0
 
 def predictive_equality(y_true, y_pred, sensitive_attr):
     unique_groups = np.unique(sensitive_attr)
@@ -39,7 +30,8 @@ def predictive_equality(y_true, y_pred, sensitive_attr):
         group_indices = (sensitive_attr == group)
         tn, fp, fn, tp = confusion_matrix(y_true[group_indices], y_pred[group_indices]).ravel()
         group_fpr[group] = fp / (fp + tn) if (fp + tn) > 0 else 0
-    return predictive_equality.__name__, max(group_fpr.values()), 0
+    fpr_diff = max(group_fpr.values()) - min(group_fpr.values())
+    return predictive_equality.__name__, fpr_diff, 0
 
 
 def predictive_parity(y_true, y_pred, sensitive_attr):
@@ -49,7 +41,8 @@ def predictive_parity(y_true, y_pred, sensitive_attr):
         group_indices = (sensitive_attr == group)
         tn, fp, fn, tp = confusion_matrix(y_true[group_indices], y_pred[group_indices]).ravel()
         group_ppv[group] = tp / (tp + fp) if (tp + fp) > 0 else 0
-    return predictive_parity.__name__, max(group_ppv.values()), 0
+    ppv_diff = max(group_ppv.values()) - min(group_ppv.values())
+    return predictive_parity.__name__, ppv_diff, 0
 
 
 def mutual_info(sensitive_attr, y_pred):
@@ -78,7 +71,7 @@ def counterfactual_fairness(model, counterfactual_x, y_true, y_pred, y_pred_prob
 
 
 def test_metrics(model, counterfactual_x, y_pred,y_true, sensitive_attr, y_pred_proba):
-    d_p = demographic_parity(y_pred=y_pred, sensitive_attr=sensitive_attr)
+    # d_p = demographic_parity(y_pred=y_pred, sensitive_attr=sensitive_attr)
 
     m_d = mean_difference(y_pred=y_pred, sensitive_attr=sensitive_attr)
 
@@ -93,7 +86,7 @@ def test_metrics(model, counterfactual_x, y_pred,y_true, sensitive_attr, y_pred_
     c_f,c_a,c_c = counterfactual_fairness(model=model, counterfactual_x=counterfactual_x,
                                       y_true=y_true, y_pred=y_pred, y_pred_proba=y_pred_proba)
 
-    lst = [d_p,m_d,e_o,pred_eq,pred_p,mut_inf,c_f,c_a,c_c]
+    lst = [m_d,e_o,pred_eq,pred_p,mut_inf,c_f,c_a,c_c]
 
     return lst
 

@@ -15,10 +15,10 @@ class Bank:
 
     @staticmethod
     def _clean_df(df: pd.DataFrame):
-        df = df.dropna()
         to_drop = ['contact', 'day_of_week', 'duration', 'month',
                    'pdays', 'nr.employed', 'euribor3m', 'emp.var.rate']
         df = df.drop(to_drop, axis = 1)
+        df = df.dropna()
         return df
 
     @staticmethod

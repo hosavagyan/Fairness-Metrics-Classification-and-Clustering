@@ -7,7 +7,6 @@ acceptable_ranges = {
     'counterfactual_accuracy': 0.05, # handwritten
     'counterfactual_consistency': 0.05, # handwritten
     'Four Fifths Rule': 0.2,  # holisticAI  ✔ Normalized to [0.8, 1]
-    'demographic_parity': 0.2, # handwritten ✔
     'mean_difference': 0.2, # handwritten ✔
     'Theil Index': 0.3,  # holisticAI ✔
     'Disparate Impact': 0.4,  # holisticAI  ✔ Normalized to [0.8, 1.2]
@@ -24,7 +23,7 @@ acceptable_ranges = {
 }
 
 initial_groups = {
-    1: ['Disparate Impact', 'Four Fifths Rule','demographic_parity',
+    1: ['Disparate Impact', 'Four Fifths Rule',
         'mean_difference', 'Theil Index'],
     2: ['Average Odds Difference', 'predictive_equality', 'equal_opportunity',
         'abroca', 'predictive_parity', 'acc_diff', 'z_test_diff', 'z_test_ratio'],
@@ -32,7 +31,5 @@ initial_groups = {
         'Cohen D', 'mutual_info']
 }
 
-# lst_of_data = [(Adult, 'race'), (Adult, 'sex'), (Bank, 'age'),
-#                (Bank,'marital'), (COMPAS, 'age'),(COMPAS, 'sex')]
-
-lst_of_data = [(Bank, 'age')]
+lst_of_data = [(Adult, 'race'), (Adult, 'sex'), (Bank, 'age'),
+               (Bank,'marital'), (COMPAS, 'age'),(COMPAS, 'sex')]
